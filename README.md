@@ -69,3 +69,18 @@ When the current is around 100mA, it never disconnects.
 ![image](https://www.fastoe.com/images/2020/11/ping-valuedownload-speed.jpg)
 
 Enjoy!
+
+
+### NOTE
+
+For 5.10 kernel, please clone the v5.6.1 branch:
+```
+sudo apt update
+sudo apt install -y bc git dkms build-essential raspberrypi-kernel-headers
+git clone -b v5.6.1 https://github.com/fastoe/RTL8812BU_for_Raspbian
+cd RTL8812BU_for_Raspbian
+make
+sudo make install
+sudo reboot
+```
+sudo reboot
