@@ -83,4 +83,3 @@ make
 sudo make install
 sudo reboot
 ```
-sudo reboot
