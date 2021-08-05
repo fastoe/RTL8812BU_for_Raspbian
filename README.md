@@ -22,6 +22,18 @@ Currently tested with Linux RaspberryPi 5.4.51-v7l+/4.19.118-v7+/4.19.97-v7+ on:
 
 To build, you have to retrieve source and run `make`, do following:
 
+For 5.10 kernel, please clone the v5.6.1 branch:
+```
+sudo apt update
+sudo apt install -y bc git dkms build-essential raspberrypi-kernel-headers
+git clone -b v5.6.1 https://github.com/fastoe/RTL8812BU_for_Raspbian
+cd RTL8812BU_for_Raspbian
+make
+sudo make install
+sudo reboot
+```
+
+For 5.4 kernel:
 ```bash
 sudo apt update
 sudo apt install -y bc git dkms build-essential raspberrypi-kernel-headers
@@ -32,7 +44,7 @@ sudo make install
 sudo reboot
 ```
 
-If fails to compile like this:
+If fails to compile like `/lib/modules/5.x.x-v7+/build: No such file or directory.  Stop.`:
 ```
 pi@raspberrypi:~/RTL8812BU_for_Raspbian $ make
 make ARCH=arm CROSS_COMPILE= -C /lib/modules/5.4.51-v7+/build M=/home/pi/RTL8812BU_for_Raspbian  modules
@@ -41,7 +53,7 @@ make: *** [Makefile:2284: modules] Error 2
 ```
 please run the `rpi-source` command to install the kernel headers for kernel 5.4.51-v7+:
 ```
-sudo apt install -y bc git flex bison libssl-dev
+sudo apt install -y bc git flex bison libssl-dev libncurses5-dev
 sudo wget https://raw.githubusercontent.com/RPi-Distro/rpi-source/master/rpi-source -O /usr/local/bin/rpi-source && sudo chmod +x /usr/local/bin/rpi-source && /usr/local/bin/rpi-source -q --tag-update
 rpi-source
 ```
@@ -69,17 +81,3 @@ When the current is around 100mA, it never disconnects.
 ![image](https://www.fastoe.com/images/2020/11/ping-valuedownload-speed.jpg)
 
 Enjoy!
-
-
-### NOTE
-
-For 5.10 kernel, please clone the v5.6.1 branch:
-```
-sudo apt update
-sudo apt install -y bc git dkms build-essential raspberrypi-kernel-headers
-git clone -b v5.6.1 https://github.com/fastoe/RTL8812BU_for_Raspbian
-cd RTL8812BU_for_Raspbian
-make
-sudo make install
-sudo reboot
-```
