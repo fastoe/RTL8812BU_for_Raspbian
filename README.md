@@ -12,7 +12,8 @@ A few known wireless cards that use this driver include:
 * Dlink DWA-181
 * Dlink DWA-182
 
-Currently tested with Linux RaspberryPi 5.4.51-v7l+/4.19.118-v7+/4.19.97-v7+ on:
+Currently tested with Linux RaspberryPi 5.10.17-v7l+/5.4.51-v7l+/4.19.118-v7+/4.19.97-v7+ on:
+- Raspberry Pi 400
 - Raspberry Pi 4 B
 - Raspberry Pi Zero W
 - Raspberry Pi 3 B+
