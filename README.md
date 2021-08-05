@@ -44,7 +44,7 @@ sudo make install
 sudo reboot
 ```
 
-If fails to compile like `/lib/modules/5.x.x-v7+/build: No such file or directory.  Stop.`:
+If fails to compile like `/lib/modules/5.x.x-v7+/build: No such file or directory.  Stop`:
 ```
 pi@raspberrypi:~/RTL8812BU_for_Raspbian $ make
 make ARCH=arm CROSS_COMPILE= -C /lib/modules/5.4.51-v7+/build M=/home/pi/RTL8812BU_for_Raspbian  modules
