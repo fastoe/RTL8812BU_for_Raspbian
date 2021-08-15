@@ -23,7 +23,7 @@ Currently tested with Linux RaspberryPi 5.10.17-v7l+/5.4.51-v7l+/4.19.118-v7+/4.
 
 To build, you have to retrieve source and run `make`, do following:
 
-For 5.10 kernel, please clone the v5.6.1 branch:
+For Raspberry Pi OS 5.10 kernel, please clone the v5.6.1 branch:
 ```
 sudo apt update
 sudo apt install -y bc git dkms build-essential raspberrypi-kernel-headers
@@ -34,7 +34,7 @@ sudo make install
 sudo reboot
 ```
 
-For 5.4 kernel:
+For Raspberry Pi OS 5.4 kernel:
 ```bash
 sudo apt update
 sudo apt install -y bc git dkms build-essential raspberrypi-kernel-headers
