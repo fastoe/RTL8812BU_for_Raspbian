@@ -1,6 +1,4 @@
-# Realtek RTL8812BU Driver for Linux
-
-[![Build Status](https://travis-ci.com/fastoe/RTL8812BU.svg?branch=master)](https://travis-ci.com/fastoe/RTL8812BU)
+# Realtek 8812BU Driver for Raspbian
 
 Driver for 802.11ac USB adapter with RTL8812BU chipset, only STA/Monitor mode is supported, no AP mode.
 
@@ -14,42 +12,73 @@ A few known wireless cards that use this driver include:
 * Dlink DWA-181
 * Dlink DWA-182
 
-Currently tested with Linux kernel 4.12.14/4.15.0/5.3.0 on X86_64 platform **only**.
+Currently tested with Linux RaspberryPi 5.10.17-v7l+/5.4.51-v7l+/4.19.118-v7+/4.19.97-v7+ on:
+- Raspberry Pi 400
+- Raspberry Pi 4 B
+- Raspberry Pi Zero W
+- Raspberry Pi 3 B+
+- Raspberry Pi 2 B
 
-### For Raspberry Pi
-* https://github.com/fastoe/RTL8812BU_for_Raspbian
+### Manual installation
 
+To build, you have to retrieve source and run `make`, do following:
 
-### DKMS installation
-
-```bash
+For Raspberry Pi OS kernel 5.10.17, please clone the v5.6.1 branch:
+```
 sudo apt update
-sudo apt -y install dkms git bc
-git clone https://github.com/fastoe/RTL8812BU.git
-cd RTL8812BU
-VER=$(sed -n 's/\PACKAGE_VERSION="\(.*\)"/\1/p' dkms.conf)
-sudo rsync -rvhP ./ /usr/src/rtl88x2bu-${VER}
-sudo dkms add -m rtl88x2bu -v ${VER}
-sudo dkms build -m rtl88x2bu -v ${VER}
-sudo dkms install -m rtl88x2bu -v ${VER}
-sudo modprobe 88x2bu
+sudo apt install -y bc git dkms build-essential raspberrypi-kernel-headers
+git clone -b v5.6.1 https://github.com/fastoe/RTL8812BU_for_Raspbian
+cd RTL8812BU_for_Raspbian
+make
+sudo make install
 sudo reboot
 ```
 
-For setting monitor mode:
-
+For Raspberry Pi OS kernel 5.4 & previous versions:
 ```bash
-# configure for monitor mode
-sed -i 's/CONFIG_80211W = n/CONFIG_80211W = y/' Makefile
-sed -i 's/CONFIG_WIFI_MONITOR = n/CONFIG_WIFI_MONITOR = y/' Makefile
-
+sudo apt update
+sudo apt install -y bc git dkms build-essential raspberrypi-kernel-headers
+git clone https://github.com/fastoe/RTL8812BU_for_Raspbian
+cd RTL8812BU_for_Raspbian
 make
 sudo make install
-sudo ifconfig wlx1cbfcea97791 down
-sudo iwconfig wlx1cbfcea97791 mode monitor
-sudo ifconfig wlx1cbfcea97791 up
+sudo reboot
 ```
 
-![image](https://www.fastoe.com/images/2020/05/8812bu-monitor-mode.png)
+If fails to compile like `/lib/modules/5.x.x-v7+/build: No such file or directory.  Stop`:
+```
+pi@raspberrypi:~/RTL8812BU_for_Raspbian $ make
+make ARCH=arm CROSS_COMPILE= -C /lib/modules/5.4.51-v7+/build M=/home/pi/RTL8812BU_for_Raspbian  modules
+make[1]: *** /lib/modules/5.4.51-v7+/build: No such file or directory.  Stop.
+make: *** [Makefile:2284: modules] Error 2
+```
+please run the `rpi-source` command to install the kernel headers for kernel:
+```
+sudo apt install -y bc git flex bison libssl-dev libncurses5-dev
+sudo wget https://raw.githubusercontent.com/RPi-Distro/rpi-source/master/rpi-source -O /usr/local/bin/rpi-source && sudo chmod +x /usr/local/bin/rpi-source && /usr/local/bin/rpi-source -q --tag-update
+rpi-source
+```
+then, re-make again.
+
+### Known Issues
+
+Below are a few known bugs,
+- Always required authentication without connect on 5GHz band
+- Short disconnects every few seconds on 5GHz band
+
+the above problems are caused by power saving. First, make sure that the power supply of your Raspberry Pi can provide 3A current, then we can disable the 8812bu WiFi adapter power saving.
+```
+modprobe -r 88x2bu
+modprobe 88x2bu rtw_power_mgnt=0 rtw_ips_mode=0 rtw_enusbss=0
+echo "options 88x2bu rtw_power_mgnt=0 rtw_ips_mode=0 rtw_enusbss=0" | sudo tee /etc/modprobe.d/88x2bu.conf
+```
+
+When the current is around 100mA, it never disconnects.
+
+![image](https://www.fastoe.com/images/2020/11/disable-power-saving-current.jpg)
+
+144mA @ full speed download (22MB/s).
+
+![image](https://www.fastoe.com/images/2020/11/ping-valuedownload-speed.jpg)
 
 Enjoy!
